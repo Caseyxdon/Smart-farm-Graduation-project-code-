@@ -1,0 +1,1671 @@
+#include "ESP32_Servo.h"
+Servo myservo;  // create servo object to control a servo
+                // 16 servo objects can be created on the ESP32
+
+int pos = 0;    // variable to store the servo position
+// Recommended PWM GPIO pins on the ESP32 include 2,4,12-19,21-23,25-27,32-33 
+int servoPin = 26;
+
+void setup() {
+  Serial.begin(9600);
+  myservo.attach(servoPin);   // attaches the servo on pin 26 to the servo object
+  myservo.write(180);
+  delay(2000);
+}
+
+void loop() {
+
+}
+
+#define LED_BUILTIN 27  //LED pins
+
+void setup() {
+  // initialize digital pin LED_BUILTIN as an output.
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
+  delay(1000);                      // wait for a second
+  digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
+  delay(1000);                      // wait for a second
+}
+
+
+#include <analogWrite.h>  //Import PWM output library
+#define led 27            //Define LED pin
+
+void setup(){
+  pinMode(led, OUTPUT);     //Set pin to output mode
+}
+
+void loop(){
+  for(int i=0; i<255; i++)  //for loop statement. Constantly increase variable i till 255, exit the loop
+  {
+    analogWrite(led, i);    //PWM output, used to control the brightness of LED
+    delay(3);
+  }
+  for(int i=255; i>0; i--)  //for loop statement. Constantly decrease variable i till 0, exit the loop
+  {
+    analogWrite(led, i);
+    delay(3);
+  }
+}
+
+
+#define ButtonPin 5 //Define the button pin to 5
+
+void setup() {
+  //initialize serial port and set baud rate to 9600
+  Serial.begin(9600);
+  //Set pin to input mode
+  pinMode(ButtonPin,INPUT);
+}
+
+void loop() {
+  //Define a value as the read button value
+  int ReadValue = digitalRead(ButtonPin); 
+  //Serial port prints the defined value
+  Serial.print("The current status of the button is : ");
+  Serial.println(ReadValue);
+  delay(500);
+}
+
+#define ButtonPin 5 //Define the button pin
+int value = 0;      //Define a value to determine the status of button
+
+void setup() {
+  //Initialize the serial port and set baud rate to 9600
+  Serial.begin(9600);
+  //Set the pin to inpu tmode
+  pinMode(ButtonPin,INPUT);
+}
+
+void loop() {
+  //Define a value as the read button value
+  int ReadValue = digitalRead(ButtonPin); 
+  //Detect whether the button is pressed
+  if (ReadValue == 0) {
+    //Eliminate the button shake
+    delay(10);  
+    if (ReadValue == 0) {
+      value = !value;
+      Serial.print("The current status of the button is : ");
+      Serial.println(value);
+    }
+    //Detect again whether the button is still pressed
+    //Pressed: execute the loop; Released: exit the loop to next step
+    while (digitalRead(ButtonPin) == 0); 
+  }
+}
+
+
+#define ButtonPin 5   //Define a button pin
+#define LED       27  //Define LED pin
+int value = 0;        //Define a value to detect button status
+
+void setup() {
+  //initialize serial port and set baud rate to 9600
+  Serial.begin(9600);
+  //Set pin to input mode
+  pinMode(ButtonPin,INPUT);
+  //Set pin to output mode
+  pinMode(LED,OUTPUT);
+}
+
+void loop() {
+  //Define a value as the read button value
+  int ReadValue = digitalRead(ButtonPin); 
+  //Detect whether the button is pressed
+  if (ReadValue == 0) {
+    //Eliminate the button shake
+    delay(10);  
+    if (ReadValue == 0) {
+      value = !value;
+      //Detect the button status, press once to light up LED, press again to turn off LED, in a loop
+      if(value) {
+        digitalWrite(LED,HIGH);
+      }else{
+        digitalWrite(LED,LOW);
+      }
+    }
+    //Detect the button status again
+    //Pressed: execute the loop; Released: exit the loop to next step
+    while (digitalRead(ButtonPin) == 0); 
+  }
+}
+
+#define PhotocecllPin 34  //Define the photoresistor pin
+
+void setup() {
+  //Initialize the serial port
+  Serial.begin(9600);
+  //Set the pin to input mode
+  pinMode(PhotocecllPin,INPUT);
+}
+
+void loop() {
+  //Read the value of photoresistor
+  int ReadValue = analogRead(PhotocecllPin);
+  //Print the value. NOTE: ESP32 board is 12-bit ADC, whose detection range is within 0~4095.
+  Serial.print("Photocecll value: ");
+  Serial.println(ReadValue);
+  delay(500);
+}
+
+
+#define PhotocecllPin 34  //Define the photoresistor pin
+#define LED           27  //Define LED pin
+
+void setup() {
+  //Initialize serial port
+  Serial.begin(9600);
+  //Set the photoresistor pin to input mode 
+  pinMode(PhotocecllPin,INPUT);
+  //Set the LED pin to output mode
+  pinMode(LED,OUTPUT);
+}
+
+void loop() {
+  //Read the value of the photoresistor
+  int ReadValue = analogRead(PhotocecllPin);
+  //Print the value. NOTE: ESP32 board is 12-bit ADC, whose detection value range is within 0~4095.
+  Serial.print("Photocecll value: ");
+  Serial.println(ReadValue);
+  //Determine:
+  //The value of the photoresistor >= 800, LED turns off
+  //The value of the photoresistor =< 800, LED turns on
+  if(ReadValue >= 800) {
+    digitalWrite(LED,LOW);
+    Serial.println("LED OFF");
+  }
+  else{
+    digitalWrite(LED,HIGH);
+    Serial.println("LED ON");
+  }
+  delay(100);
+}
+
+#define PyroelectricPIN 23
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(PyroelectricPIN,INPUT);
+}
+
+void loop() {
+  //Read the value of PIR motion sensor
+  int ReadValue = digitalRead(PyroelectricPIN);
+  if(ReadValue){
+    Serial.println("Someone");
+  }
+  else{
+    Serial.println("No one");
+  }
+  delay(100);
+}
+
+#define BuzzerPin 16  //Define the buzzer pin
+
+void setup() {
+  //Set the pin to output mode
+  pinMode(BuzzerPin,OUTPUT);
+}
+
+void loop() {
+  digitalWrite(BuzzerPin,HIGH);
+  delayMicroseconds(500);//Delay 500us
+  digitalWrite(BuzzerPin,LOW);
+  delayMicroseconds(500);//Delay 500us
+}
+
+
+
+
+const int buzzerPin = 16;   //Set buzzer pin to 16
+void setup() {
+  pinMode(buzzerPin,OUTPUT);
+}
+void loop() {
+//tone(buzzerPin,294,250,0);  //4 parameters are: pin, frequency, delay, path
+    tone(buzzerPin,532);           //duo --C2
+    delay(100);
+    tone(buzzerPin,587);           //re --D3
+    delay(100);
+    tone(buzzerPin,659);           //mi --E3
+    delay(100);
+   //Alarm
+   for(int i = 200; i<=1000; i+=10){ 
+    tone(buzzerPin,i);
+    delay(10);
+   }
+    //Alarm
+   for(int i = 1000; i>=200; i-=10){ 
+    tone(buzzerPin,i);
+    delay(10);
+   }
+noTone(buzzerPin);
+}
+
+
+#define NOTE_B0  31
+#define NOTE_C1  33
+#define NOTE_CS1 35
+#define NOTE_D1  37
+#define NOTE_DS1 39
+#define NOTE_E1  41
+#define NOTE_F1  44
+#define NOTE_FS1 46
+#define NOTE_G1  49
+#define NOTE_GS1 52
+#define NOTE_A1  55
+#define NOTE_AS1 58
+#define NOTE_B1  62
+#define NOTE_C2  65
+#define NOTE_CS2 69
+#define NOTE_D2  73
+#define NOTE_DS2 78
+#define NOTE_E2  82
+#define NOTE_F2  87
+#define NOTE_FS2 93
+#define NOTE_G2  98
+#define NOTE_GS2 104
+#define NOTE_A2  110
+#define NOTE_AS2 117
+#define NOTE_B2  123
+#define NOTE_C3  131
+#define NOTE_CS3 139
+#define NOTE_D3  147
+#define NOTE_DS3 156
+#define NOTE_E3  165
+#define NOTE_F3  175
+#define NOTE_FS3 185
+#define NOTE_G3  196
+#define NOTE_GS3 208
+#define NOTE_A3  220
+#define NOTE_AS3 233
+#define NOTE_B3  247
+#define NOTE_C4  262
+#define NOTE_CS4 277
+#define NOTE_D4  294
+#define NOTE_DS4 311
+#define NOTE_E4  330
+#define NOTE_F4  349
+#define NOTE_FS4 370
+#define NOTE_G4  392
+#define NOTE_GS4 415
+#define NOTE_A4  440
+#define NOTE_AS4 466
+#define NOTE_B4  494
+#define NOTE_C5  523
+#define NOTE_CS5 554
+#define NOTE_D5  587
+#define NOTE_DS5 622
+#define NOTE_E5  659
+#define NOTE_F5  698
+#define NOTE_FS5 740
+#define NOTE_G5  784
+#define NOTE_GS5 831
+#define NOTE_A5  880
+#define NOTE_AS5 932
+#define NOTE_B5  988
+#define NOTE_C6  1047
+#define NOTE_CS6 1109
+#define NOTE_D6  1175
+#define NOTE_DS6 1245
+#define NOTE_E6  1319
+#define NOTE_F6  1397
+#define NOTE_FS6 1480
+#define NOTE_G6  1568
+#define NOTE_GS6 1661
+#define NOTE_A6  1760
+#define NOTE_AS6 1865
+#define NOTE_B6  1976
+#define NOTE_C7  2093
+#define NOTE_CS7 2217
+#define NOTE_D7  2349
+#define NOTE_DS7 2489
+#define NOTE_E7  2637
+#define NOTE_F7  2794
+#define NOTE_FS7 2960
+#define NOTE_G7  3136
+#define NOTE_GS7 3322
+#define NOTE_A7  3520
+#define NOTE_AS7 3729
+#define NOTE_B7  3951
+#define NOTE_C8  4186
+#define NOTE_CS8 4435
+#define NOTE_D8  4699
+#define NOTE_DS8 4978
+
+#define BUZZERPIN 16
+ 
+// notes in the melody:
+int melody[] = {
+NOTE_E4, NOTE_E4, NOTE_E4, NOTE_C4, NOTE_E4, NOTE_G4, NOTE_G3,
+NOTE_C4, NOTE_G3, NOTE_E3, NOTE_A3, NOTE_B3, NOTE_AS3, NOTE_A3, NOTE_G3, NOTE_E4, NOTE_G4, NOTE_A4, NOTE_F4, NOTE_G4, NOTE_E4, NOTE_C4, NOTE_D4, NOTE_B3,
+NOTE_C4, NOTE_G3, NOTE_E3, NOTE_A3, NOTE_B3, NOTE_AS3, NOTE_A3, NOTE_G3, NOTE_E4, NOTE_G4, NOTE_A4, NOTE_F4, NOTE_G4, NOTE_E4, NOTE_C4, NOTE_D4, NOTE_B3,
+NOTE_G4, NOTE_FS4, NOTE_E4, NOTE_DS4, NOTE_E4, NOTE_GS3, NOTE_A3, NOTE_C4, NOTE_A3, NOTE_C4, NOTE_D4, NOTE_G4, NOTE_FS4, NOTE_E4, NOTE_DS4, NOTE_E4, NOTE_C5, NOTE_C5, NOTE_C5,
+NOTE_G4, NOTE_FS4, NOTE_E4, NOTE_DS4, NOTE_E4, NOTE_GS3, NOTE_A3, NOTE_C4, NOTE_A3, NOTE_C4, NOTE_D4, NOTE_DS4, NOTE_D4, NOTE_C4,
+NOTE_C4, NOTE_C4, NOTE_C4, NOTE_C4, NOTE_D4, NOTE_E4, NOTE_C4, NOTE_A3, NOTE_G3, NOTE_C4, NOTE_C4, NOTE_C4, NOTE_C4, NOTE_D4, NOTE_E4,
+NOTE_C4, NOTE_C4, NOTE_C4, NOTE_C4, NOTE_D4, NOTE_E4, NOTE_C4, NOTE_A3, NOTE_G3
+};
+ 
+// note durations: 4 = quarter note, 8 = eighth note, etc.:
+int noteDurations[] = {
+8,4,4,8,4,2,2,
+3,3,3,4,4,8,4,8,8,8,4,8,4,3,8,8,3,
+3,3,3,4,4,8,4,8,8,8,4,8,4,3,8,8,2,
+8,8,8,4,4,8,8,4,8,8,3,8,8,8,4,4,4,8,2,
+8,8,8,4,4,8,8,4,8,8,3,3,3,1,
+8,4,4,8,4,8,4,8,2,8,4,4,8,4,1,
+8,4,4,8,4,8,4,8,2
+};
+ 
+void setup() {
+  // iterate over the notes of the melody:
+  for (int thisNote = 0; thisNote < 98; thisNote++) {
+  
+  // to calculate the note duration, take one second
+  // divided by the note type.
+  //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
+  int noteDuration = 1000/noteDurations[thisNote];
+  tone(BUZZERPIN, melody[thisNote],noteDuration);
+  
+  // to distinguish the notes, set a minimum time between them.
+  // the note's duration + 30% seems to work well:
+  int pauseBetweenNotes = noteDuration * 1.30;
+  delay(pauseBetweenNotes);
+  // stop the tone playing:
+  noTone(BUZZERPIN);
+  }
+}
+ 
+void loop() {
+// no need to repeat the melody.
+}
+
+#define BuzzerPin 16        //Set buzzer pin to 16
+#define PyroelectricPIN 23  //Set PIR mition sensor to 23
+#define Led 27              //Set led pin to 27
+
+void setup() {
+  Serial.begin(9600);
+  //Set the pins modes
+  pinMode(BuzzerPin,OUTPUT);
+  pinMode(PyroelectricPIN,INPUT);
+  pinMode(Led,OUTPUT);
+}
+void loop() {
+  //Read the value of PIR motion sensor
+  int ReadValue = digitalRead(PyroelectricPIN);
+  if(ReadValue){
+    Serial.println("Someone");
+    digitalWrite(Led,HIGH);
+    //Alarm
+    for(int i = 200; i<=1000; i+=10){ 
+      tone(BuzzerPin,i);
+      delay(10);
+    }
+    digitalWrite(Led,LOW);
+    //Alarm
+    for(int i = 1000; i>=200; i-=10){ 
+      tone(BuzzerPin,i);
+      delay(10);
+    }
+  }
+  //Stop alarming
+  noTone(BuzzerPin);
+  Serial.println("No one");
+}
+
+#define SteamPin 35   //Define the steam sensor pin to 35
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(SteamPin,INPUT);
+}
+
+void loop() {
+  //Read the value of steam sensor
+  int ReadValue = analogRead(SteamPin);
+  Serial.print("Steam Value: ");
+  Serial.println(ReadValue);
+  delay(500);
+}
+
+#define SteamPin 35   //Define pins
+#define BuzzerPin 16
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(SteamPin,INPUT);
+  pinMode(BuzzerPin,OUTPUT);
+}
+
+void loop() {
+  //Read the value of steam sensor
+  int ReadValue = analogRead(SteamPin);
+  Serial.print("Steam Value: ");
+  Serial.println(ReadValue);
+  //Determine whether the detected value is within 800~2000
+  if(ReadValue >= 800 && 2000 > ReadValue){
+    //Execute for 3 times
+    for (int i = 0; i < 3; i++) {
+      tone(BuzzerPin,200);
+      delay(100);
+      noTone(BuzzerPin);
+      delay(100);
+    }
+  }
+  //Determine whether the detected value is within 2000~4000
+  else if (ReadValue >= 2000 && 4000 >= ReadValue) {
+    for (int i = 0; i < 3; i++) {
+      tone(BuzzerPin,400);
+      delay(100);
+      noTone(BuzzerPin);
+      delay(100);
+    }
+  }
+  //Determine whether the detected value is greater than 4000
+  else if (ReadValue > 4000) {
+    for (int i = 0; i < 3; i++) {
+      tone(BuzzerPin,600);
+      delay(100);
+      noTone(BuzzerPin);
+      delay(100);
+    }
+  }
+  noTone(BuzzerPin);
+  delay(500);
+}
+
+#include <ESP32_Servo.h>  //Import the library of servo
+Servo myservo;  // create servo object to control a servo
+                // 16 servo objects can be created on the ESP32
+                
+int pos = 0;    // variable to store the servo position
+// Recommended PWM GPIO pins on the ESP32 include 2,4,12-19,21-23,25-27,32-33 
+int servoPin = 26;
+                
+void setup() {
+  Serial.begin(9600);
+  myservo.attach(servoPin);   // attaches the servo on pin 26 to the servo object
+  myservo.write(180);
+  delay(2000);
+}
+
+void loop() {
+
+  for (pos = 80; pos <= 179; pos += 1) { // goes from 0 degrees to 80 degrees
+    // in steps of 1 degree
+    myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(15);                       // waits 15ms for the servo to reach the position
+  }
+  for (pos = 180; pos >= 81; pos -= 1) { // goes from 80 degrees to 0 degrees
+    myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(15);                       // waits 15ms for the servo to reach the position
+  }
+}
+
+#define Trigpin 12 //connect trig to io12
+#define Echopin 13 //connect echo to io13
+int duration,distance;
+
+void setup(){
+  Serial.begin(9600); //Set the baud rate to 9600
+  pinMode(Trigpin,OUTPUT);  //set trig pin to output mode
+  pinMode(Echopin,INPUT);   //set echo pin to input mode
+}
+void loop(){
+  digitalWrite(Trigpin,LOW);
+  delayMicroseconds(2);
+  digitalWrite(Trigpin,HIGH);
+  delayMicroseconds(10);	//Trigger the trig pin via a high level lasting at least 10us
+  digitalWrite(Trigpin,LOW);
+  duration = pulseIn(Echopin,HIGH);	//the time of high level at echo pin
+  distance = duration/58;		//convert into distance(cm)
+  delay(50);
+  Serial.print("distance:");	//Serial monitor prints the value
+  Serial.print(distance);
+  Serial.println("cm");
+}
+
+#include <ESP32_Servo.h>  //Import the library of servo on ESP32 board
+Servo myservo;  // create servo object to control a servo
+                // 16 servo objects can be created on the ESP32
+
+#define TrigPin 12 //connect trig to D12
+#define EchoPin 13 //connect echo to D13
+#define ServoPin 26
+int duration,distance;
+
+void setup(){
+
+  Serial.begin(9600); //Set the baud rate to 9600
+  pinMode(TrigPin,OUTPUT);  //set trig pin to output mode
+  pinMode(EchoPin,INPUT);   //Set echo pin to input mode
+  myservo.attach(ServoPin);   // attaches the servo on pin 26 to the servo object
+}
+void loop(){
+  Serial.println(getDistance());
+  //When the distance is detected within 2~7cm, open the feeding box. Or else, close. 
+  if (getDistance() >= 2 && 7 >= getDistance()) {
+    //Servo rotates to 80° to open the box
+    myservo.write(80);
+    delay(500);
+  }
+  else{
+    myservo.write(180);
+    delay(500);
+  }
+}
+
+//Put the gotten distance in a function
+float getDistance() {
+
+  digitalWrite(TrigPin,LOW);
+  delayMicroseconds(2);
+  digitalWrite(TrigPin,HIGH);
+  delayMicroseconds(10);	//Trigger the trig pin via a high level lasting at least 10us
+  digitalWrite(TrigPin,LOW);
+  duration = pulseIn(EchoPin,HIGH);	//the time of high level at echo pin
+  distance = duration/58;		//convert into distance(cm)
+  delay(50);
+  
+  return distance;
+}
+
+#include <dht11.h>
+#define DHT11PIN 17
+
+dht11 DHT11;
+
+void setup()
+{
+  Serial.begin(9600);
+  Serial.println("DHT11 TEST PROGRAM ");
+  Serial.print("LIBRARY VERSION: ");
+  Serial.println(DHT11LIB_VERSION);
+  Serial.println();
+}
+
+void loop()
+{
+  Serial.println("\n");
+
+  int chk = DHT11.read(DHT11PIN);
+
+  Serial.print("Read sensor: ");
+  switch (chk)
+  {
+    case DHTLIB_OK: 
+                Serial.println("OK"); 
+                break;
+    case DHTLIB_ERROR_CHECKSUM: 
+                Serial.println("Checksum error"); 
+                break;
+    case DHTLIB_ERROR_TIMEOUT: 
+                Serial.println("Time out error"); 
+                break;
+    default: 
+                Serial.println("Unknown error"); 
+                break;
+  }
+
+  Serial.print("Humidity (%): ");
+  Serial.println((float)DHT11.humidity, 2);
+
+  Serial.print("Temperature (oC): ");
+  Serial.println((float)DHT11.temperature, 2);
+
+  Serial.print("Temperature (oF): ");
+  Serial.println(Fahrenheit(DHT11.temperature), 2);
+
+  Serial.print("Temperature (K): ");
+  Serial.println(Kelvin(DHT11.temperature), 2);
+
+  Serial.print("Dew Point (oC): ");
+  Serial.println(dewPoint(DHT11.temperature, DHT11.humidity));
+
+  Serial.print("Dew PointFast (oC): ");
+  Serial.println(dewPointFast(DHT11.temperature, DHT11.humidity));
+
+  delay(2000);
+}
+
+double Fahrenheit(double celsius) 
+{
+        return 1.8 * celsius + 32;
+}    //Convert Celsius degree to Fahrenheit degree
+
+double Kelvin(double celsius)
+{
+        return celsius + 273.15;
+}     //Convert Celsius degree to Kelvins
+
+//Dew Point. The air is saturated and dews are produced under this temperature.
+//Reference: http://wahiduddin.net/calc/density_algorithms.htm 
+double dewPoint(double celsius, double humidity)
+{
+        double A0= 373.15/(273.15 + celsius);
+        double SUM = -7.90298 * (A0-1);
+        SUM += 5.02808 * log10(A0);
+        SUM += -1.3816e-7 * (pow(10, (11.344*(1-1/A0)))-1) ;
+        SUM += 8.1328e-3 * (pow(10,(-3.49149*(A0-1)))-1) ;
+        SUM += log10(1013.246);
+        double VP = pow(10, SUM-3) * humidity;
+        double T = log(VP/0.61078);   // temp var
+        return (241.88 * T) / (17.558-T);
+}
+
+// Fast calculate the Dew Point, its speed is 5 times of dewPoint()
+// Reference: http://en.wikipedia.org/wiki/Dew_point
+double dewPointFast(double celsius, double humidity)
+{
+        double a = 17.271;
+        double b = 237.7;
+        double temp = (a * celsius) / (b + celsius) + log(humidity/100);
+        double Td = (b * temp) / (a - temp);
+        return Td;
+}
+
+#include <LiquidCrystal_I2C.h>
+
+//Initialize LCD 1602, 0x27 is I2C address
+LiquidCrystal_I2C lcd(0x27,16,2);
+
+void setup() {
+  //Initialize LCD
+  lcd.init();
+  // Turn the (optional) backlight off/on
+  lcd.backlight();
+  //lcd.noBacklight();
+
+  //Set the position o dcursor
+  lcd.setCursor(0, 0);
+  //LCD prints
+  lcd.print("HELLO WORLD 0");
+  lcd.setCursor(0, 1);
+  lcd.print("HELLO WORLD 1");
+
+  //Clear displays
+  // lcd.clear();
+}
+
+void loop() {
+
+  // Turn the display on/off (quickly)
+  //lcd.noDisplay();
+  //lcd.display();
+
+  // Turns the underline cursor on/off
+  //lcd.noCursor();
+  //lcd.cursor();
+
+  // Turn on and off the blinking cursor
+  // lcd.noBlink();
+  // lcd.blink();
+
+  // These commands scroll the display without changing the RAM
+  //lcd.scrollDisplayLeft();
+  //lcd.scrollDisplayRight();
+
+  // This is for text that flows Left to Right
+  //lcd.leftToRight();
+  //lcd.rightToLeft();
+
+  // This will 'right justify' text from the cursor
+  //lcd.autoscroll();
+  //lcd.noAutoscroll();
+
+}
+
+#define MotorPin1 19//(IN+)
+#define MotorPin2 18//(IN-)
+
+void setup() {
+  pinMode(MotorPin1,OUTPUT);
+  pinMode(MotorPin2,OUTPUT);
+
+  //Set PWM output to adjust the speed of motor
+  ledcSetup(1, 1200, 8);//Set frequency of LEDC Channel 1 to 1200, PWM resolution to 8, so duty cycle = 256
+  ledcAttachPin(MotorPin1, 1);  //Bound LEDC Channel 1 to the specified left motor pin gpio19 to output.
+  ledcSetup(3, 1200, 8);//Set frequency of LEDC Channel 3 to 1200, PWM resolution to 8, so duty cycle = 256
+  ledcAttachPin(MotorPin2, 3);  //Bound LEDC Channel 3 to the specified left motor pin gpio18 to output.
+}
+
+void loop() {
+  //Turn left
+  ledcWrite(1, 70);
+  ledcWrite(3, 0);
+
+  delay(2000);
+
+  //Stop
+  //WHY STOP: Prevent an excessive current at the moment of reversal. Otherwise, a forced reset may occur due to insufficient power supply on the development board.
+  delay(200);
+  ledcWrite(1, 0);
+  ledcWrite(3, 0);
+  delay(200);
+  
+  //Turn right
+  ledcWrite(1, 0);
+  ledcWrite(3, 70);
+
+  delay(2000);
+  
+  //Stop
+  delay(200);
+  ledcWrite(1, 0);
+  ledcWrite(3, 0);
+  delay(200);
+  
+}
+
+#include <LiquidCrystal_I2C.h>
+#include <dht11.h>
+
+#define DHT11PIN 17
+#define MotorPin1 19//(IN+)
+#define MotorPin2 18//(IN-)
+
+dht11 DHT11;
+
+LiquidCrystal_I2C lcd(0x27,16,2);
+
+void setup() {
+  lcd.init();
+  lcd.backlight();  
+
+  pinMode(MotorPin1,OUTPUT);
+  pinMode(MotorPin2,OUTPUT);
+
+  //Set PWM output to adjust the speed of motor
+  ledcSetup(1, 1200, 8);//Set frequency of LEDC Channel 1 to 1200, PWM resolution to 8, so duty cycle = 256
+  ledcAttachPin(MotorPin1, 1);  //Bound LEDC Channel 1 to the specified left motor pin gpio19 to output.
+  ledcSetup(3, 1200, 8);//Set frequency of LEDC Channel 3 to 1200, PWM resolution to 8, so duty cycle = 256
+  ledcAttachPin(MotorPin2, 3);  //Bound LEDC Channel 3 to the specified left motor pin gpio18 to output.
+}
+
+void loop() {
+  //Difine temperature and humidity value
+  int Temperature;
+  int Humidity;
+  //Read the value
+  int chk = DHT11.read(DHT11PIN);
+
+  Temperature = DHT11.temperature;
+  Humidity = DHT11.humidity;
+  lcd.setCursor(0, 0);
+  lcd.print("Temp:");
+  lcd.setCursor(5, 0);
+  lcd.print(Temperature); 
+
+  lcd.setCursor(0, 1);
+  lcd.print("Hum:");
+  lcd.setCursor(5, 1);
+  lcd.print(Humidity);
+  delay(500);
+  
+  if (Temperature >= 25) {
+    //Turn left
+    ledcWrite(1, 100);
+    ledcWrite(3, 0);
+  }else{
+    //Stop
+    delay(3000);
+    ledcWrite(1, 0);
+    ledcWrite(3, 0);
+    delay(200);
+  }
+}
+
+#define SoilHumidityPin 32
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(SoilHumidityPin,INPUT);
+}
+
+void loop() {
+  //Define a variable as the value of soil humidity sensor
+  int ReadValue = analogRead(SoilHumidityPin);
+  Serial.println(ReadValue);
+  delay(500);
+}
+
+#include <LiquidCrystal_I2C.h>
+
+#define BuzzerPin 16
+#define SoilHumidityPin 32
+
+LiquidCrystal_I2C lcd(0x27,16,2);
+
+void setup() {
+
+  pinMode(BuzzerPin,OUTPUT);
+  pinMode(SoilHumidityPin,INPUT);
+
+  lcd.init();
+  lcd.backlight();  
+  lcd.clear();
+
+}
+
+void loop() {
+
+  float shvalue = analogRead(SoilHumidityPin);
+
+  lcd.setCursor(0, 0);
+  lcd.print("SoilHum:");
+  lcd.setCursor(9, 0);
+  lcd.print(shvalue);
+  
+  //When the detected value is lower than the set threshold, the buzzer emits sound
+  if(200 >= shvalue)
+  {
+    tone(BuzzerPin,532);
+    delay(100);
+    tone(BuzzerPin,532);
+    delay(100);
+    tone(BuzzerPin,659);
+    delay(100);
+    noTone(BuzzerPin);  //Stop alarming
+  }
+  delay(500);
+  lcd.clear();
+}
+
+
+#define WaterLevelPin 33
+
+void setup() {
+
+  Serial.begin(9600);
+  pinMode(WaterLevelPin,INPUT);
+}
+
+void loop() {
+  int ReadValue = analogRead(WaterLevelPin);
+  Serial.println(ReadValue);
+  delay(500);
+}
+
+#include <LiquidCrystal_I2C.h>
+
+#define BuzzerPin 16
+#define WaterLevelPin 33
+
+LiquidCrystal_I2C lcd(0x27,16,2);
+
+void setup() {
+
+  //Initialize the serial port
+  Serial.begin(9600);
+  //Set the water level pin to input mode
+  pinMode(WaterLevelPin,INPUT);
+
+  //Initialize LCD
+  lcd.init();
+  //turn on the LCD backlight
+  lcd.backlight();
+  //clear displays on LCD
+  lcd.clear();
+}
+
+void loop() {
+  //Read the value of water level sensor
+  int ReadValue = analogRead(WaterLevelPin);
+  //Set the display position of cursor
+  lcd.setCursor(0, 0);
+  //Set the display position of characters
+  lcd.print("WaterLevel:");
+  lcd.setCursor(6, 1);
+  lcd.print(ReadValue);
+  
+  //When the detected value exceeds the threshold, the buzzer starts to alarm
+  if(ReadValue >= 2000)
+  {
+    tone(BuzzerPin,659);
+    delay(100);
+    tone(BuzzerPin,532);
+    delay(100);
+    tone(BuzzerPin,659);
+    delay(100);
+    noTone(BuzzerPin);  //Stop alarming
+  }
+  delay(500);
+  lcd.clear();
+}
+
+#define RelayPin 25
+char content;  //Define a character string as the received value from serial port
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(RelayPin,OUTPUT);
+}
+
+void loop() {
+  //Serial.read() receives one byte once. For example, when input "aaa", it receives one "a" at a time for three times in total.
+  if(Serial.available() > 0) {
+    if (Serial.read() == 'a') //When the input value equals to "a", irrigation begins.
+    {
+      digitalWrite(RelayPin,HIGH);
+      delay(400);//irrigation delay
+      digitalWrite(RelayPin,LOW);
+      delay(700);
+    }
+  }
+}
+
+#include <LiquidCrystal_I2C.h>
+
+#define BuzzerPin 16
+#define SoilHumidityPin 32
+#define WaterLevelPin 33
+#define RelayPin 25
+#define ButtonPin 5 //Define a button pin
+int value = 0;      //Set an initial button value
+
+LiquidCrystal_I2C lcd(0x27,16,2);
+
+void setup() {
+  //Set the pins mode
+  pinMode(BuzzerPin,OUTPUT);
+  pinMode(SoilHumidityPin,INPUT);
+  pinMode(WaterLevelPin,INPUT);
+  pinMode(RelayPin,OUTPUT);
+  pinMode(ButtonPin,INPUT);
+
+  //Initialize LCD
+  lcd.init();
+  //Turn on LCD backlight
+  lcd.backlight();
+  //Clear LCD displays
+  lcd.clear();
+}
+
+void loop() {
+  //define variables as the read values of water level, humidity and button state
+  int shvalue = analogRead(SoilHumidityPin);
+  int wlvalue = analogRead(WaterLevelPin);
+  int ReadValue = digitalRead(ButtonPin); 
+
+  //Set the display position of cursor
+  lcd.setCursor(0, 0);
+  //Set the display position of character strings
+  lcd.print("SoilHum:");
+  lcd.setCursor(9, 0);
+  lcd.print(shvalue);
+  lcd.setCursor(0, 1);
+  lcd.print("WaterLevel:");
+  lcd.setCursor(11, 1);
+  lcd.print(wlvalue);
+
+  //Determine whether the button is pressed 
+  if (ReadValue == 0) {
+    //Eliminate the button shake
+    delay(10);  
+    if (ReadValue == 0) {
+      value = !value;
+      Serial.print("The current status of the button is : ");
+      Serial.println(value);
+    }
+    //Again, determine whether the button is still pressed
+    //Pressed: execute the loop; Released: exit the loop to next execution
+    while (digitalRead(ButtonPin) == 0); 
+  }
+  //When the detected humidity is lower than the set threshold, the buzzer starts to alarm. Press button to stop alarming. 
+  if(500 >= shvalue && value == 0)
+  {
+    tone(BuzzerPin,532);
+    delay(100);
+    tone(BuzzerPin,532);
+    delay(100);
+    tone(BuzzerPin,659);
+    delay(100);
+    noTone(BuzzerPin);  //Stop alarming
+  }
+  //When the detected water level is lower than the set threshold, the buzzer starts to alarm. Press button to stop alarming. 
+  if(500 >= wlvalue && value == 0)
+  {
+    tone(BuzzerPin,411);
+    delay(100);
+    tone(BuzzerPin,639);
+    delay(100);
+    tone(BuzzerPin,411);
+    delay(100);
+    noTone(BuzzerPin);  //Stop alarming
+  }
+  //When the detected humidity is lower than the set threshold, and the water is sufficient in the pool, irrigation starts automatically. 
+  if(500 >= shvalue && wlvalue >= 1000) {
+    digitalWrite(RelayPin,HIGH);
+    delay(400);//Irrigation delay. 
+    digitalWrite(RelayPin,LOW);
+    delay(700);
+  }
+  delay(500);
+  //Clear displays
+  lcd.clear();
+}
+
+
+#include <WiFi.h>
+
+const char* ssid = "Faisal";
+const char* password = "Faisal2001";
+
+void setup() {
+  Serial.begin(9600);
+  //Initialize Wifi
+  WiFi.begin(ssid, password);
+  //Scan for wifi. If connection fails, stay in connecting, and execute "while" loop
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connecting to WiFi...");
+  }
+  //Connected. Print the IP address
+  Serial.println("Connected to WiFi");
+  Serial.println(WiFi.localIP());
+}
+
+void loop() {
+}
+
+#include <WiFi.h>
+#include <WebServer.h>
+
+const char* ssid = "Faisal";
+const char* password = "Faisal2001";
+
+WebServer server(80); //Set the server port to 80. Enter the website by IP address rather than the port number.
+
+//Initialize the website
+void handleRoot() {
+  //Used to send HTTP to the client-side for response, sending 200 means success.
+  server.send(200, "text/html", "<h1>Hello, World!</h1>");
+}
+
+void setup() {
+  Serial.begin(9600);
+  //Initialize wifi
+  WiFi.begin(ssid, password);
+  //Scan for wifi. If connection fails, stay in connecting, and execute "while" loop
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connecting to WiFi...");
+  }
+
+  //Connected. Print the IP address
+  Serial.println("Connected to WiFi");
+  Serial.println(WiFi.localIP());
+
+  server.on("/", handleRoot);
+  //Start server
+  server.begin();
+  Serial.println("Web server started");
+}
+
+void loop() {
+  server.handleClient();
+}
+
+#include <AsyncEventSource.h>
+#include <AsyncJson.h>
+#include <AsyncWebSocket.h>
+#include <AsyncWebSynchronization.h>
+#include <ESPAsyncWebServer.h>
+#include <SPIFFSEditor.h>
+#include <StringArray.h>
+#include <WebAuthentication.h>
+#include <WebHandlerImpl.h>
+#include <WebResponseImpl.h>
+
+#include <Arduino.h>
+/* Determine which development board it is (ESP32 or 8266). 
+The library files of these two boards are separated, so the corresponding library should be imported to avoid compiling error.*/
+#ifdef ESP32
+  #include <WiFi.h>
+  #include <AsyncTCP.h>
+#elif defined(ESP8266)
+  #include <ESP8266WiFi.h>
+  #include <ESPAsyncTCP.h>
+#endif
+/* Import library */
+#include <ESPAsyncWebServer.h>
+#include <LiquidCrystal_I2C.h>
+#include <dht11.h>
+#include <analogWrite.h>
+#include <ESP32_Servo.h>
+
+#define DHT11PIN        17  //Temperature and humiddity sensor pin
+#define LEDPIN          27  //LED pin
+#define SERVOPIN        26  //Servo pin
+#define FANPIN1         19  //Fan IN+ pin
+#define FANPIN2         18  //Fan IN- pin
+#define STEAMPIN        35  //Steam sensor pin
+#define LIGHTPIN        34  //Photoresistor pin
+#define SOILHUMIDITYPIN 32  //Soil humidity sensor pin
+#define WATERLEVELPIN   33  //Water level sensor pin
+#define RELAYPIN        25  //Relay pin
+
+dht11 DHT11;
+//Initialize LCD1602, 0x27 is I2C address
+LiquidCrystal_I2C lcd(0x27,16,2);
+
+const char *SSID = "Faisal";
+const char *PASS = "Faisal2001";
+
+static int A = 0;
+static int B = 0;
+static int C = 0;
+
+// Create WebServer object, port number is 80. Directly input IP to access while using port 80; Input "IP:Port number" to access while using other ports.
+AsyncWebServer server(80);
+Servo myservo;  // create servo object to control a servo
+                // 16 servo objects can be created on the ESP32
+
+// An array to store the web page
+const char index_html[] PROGMEM = R"rawliteral(
+<!DOCTYPE HTML>
+<html>
+<title>TEST HTML ESP32</title>
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <div class="btn">
+    <div id="dht"></div>
+    <button id="btn-led" onclick="setLED()">LED</button>
+    <button id="btn-fan" onclick="setFan()">Fan</button>
+    <button id="btn-feeding" onclick="setFeeding()">Feeding</button>
+    <button id="btn-watering" onclick="setWatering()">Watering</button>
+  </div>
+</body>
+<script>
+    // Run the JS function when button is pressed
+    function setLED() {
+      var payload = "A"; // Content to be sent
+      // To "/set" via "get" request
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "/set?value=" + payload, true);
+      xhr.send();
+    }
+    function setFan() {
+      var payload = "B"; // Content to be sent
+      // To "/set" via "get" request
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "/set?value=" + payload, true);
+      xhr.send();
+    }
+    function setFeeding() {
+      var payload = "C"; // Content to be sent
+      // To "/set" via "get" request
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "/set?value=" + payload, true);
+      xhr.send();
+    }
+    function setWatering() {
+      var payload = "D"; // Content to be sent
+      // To "/set" via "get" request
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "/set?value=" + payload, true);
+      xhr.send();
+    }
+    // Set a scheduled task to be executed once every 1000ms
+    setInterval(function () {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          // This code searches for the component with ID "dht" and replaces the component content with the returned content
+          document.getElementById("dht").innerHTML = this.responseText;
+        }
+      };
+      // Request "/dht" via "GET"
+      xhttp.open("GET", "/dht", true);
+      xhttp.send();
+    }, 1000)
+</script>
+<style>
+  /*Web page*/
+  html,body{margin: 0;width: 100%;height: 100%;}
+  body{display: flex;justify-content: center;align-items: center;}
+  #dht{text-align: center;width: 100%;height: 100%;color: #fff;background-color: #47a047;font-size: 48px;}
+  .btn button{width: 100%;height: 100%;border: none;font-size: 30px;color: #fff;position: relative;}
+  button{color: #ffff;background-color: #89e689;margin-top: 20px;}
+  .btn button:active{top: 2px;}
+</style>
+</html>
+)rawliteral";
+
+//Acquire values and package it in HTML format
+String Merge_Data(void)
+{
+  //Define variables as detected values
+  String dataBuffer;
+  String Humidity;
+  String Temperature;
+  String Steam;
+  String Light;
+  String SoilHumidity;
+  String WaterLevel;
+  //Acquire values
+  int chk = DHT11.read(DHT11PIN);
+  //Steam sensor
+  Steam = String(analogRead(STEAMPIN) / 4095.0 * 100);
+  //Photoresistor
+  Light = String(analogRead(LIGHTPIN));
+  //Soil humidity sensor
+  int shvalue = analogRead(SOILHUMIDITYPIN) / 4095.0 * 100 * 2.3;
+  shvalue = shvalue > 100 ? 100 : shvalue;
+  SoilHumidity = String(shvalue);
+  //Water level sensor
+  int wlvalue = analogRead(WATERLEVELPIN) / 4095.0 * 100 * 2.5;
+  wlvalue = wlvalue > 100 ? 100 : wlvalue;
+  WaterLevel = String(wlvalue);
+  //Temperature
+  Temperature = String(DHT11.temperature);
+  //Humidity
+  Humidity = String(DHT11.humidity);
+  
+  // Package the data into an HTML, display code
+  dataBuffer += "<p>";
+  dataBuffer += "<h1>Sensor Data</h1>";
+  dataBuffer += "<b>Temperature:</b><b>";
+  dataBuffer += Temperature;
+  dataBuffer += "</b><b>℃</b><br/>";
+  dataBuffer += "<b>Humidity:</b><b>";
+  dataBuffer += Humidity;
+  dataBuffer += "</b><b>%rh</b><br/>";
+  dataBuffer += "<b>WaterLevel:</b><b>";
+  dataBuffer += WaterLevel;
+  dataBuffer += "</b><b>%</b><br/>";
+  dataBuffer += "<b>Steam:</b><b>";
+  dataBuffer += Steam;
+  dataBuffer += "</b><b>%</b><br/>";
+  dataBuffer += "<b>Light:</b><b>";
+  dataBuffer += Light;
+  dataBuffer += "</b><b></b><br/>";
+  dataBuffer += "<b>SoilHumidity:</b><b>";
+  dataBuffer += SoilHumidity;
+  dataBuffer += "</b><b>%</b><br/>";
+  dataBuffer += "</p>";
+
+  //  Return the array of data
+  return dataBuffer;
+}
+
+// Diliver and process Callback function
+void Config_Callback(AsyncWebServerRequest *request)
+{
+  if (request->hasParam("value")) // If there is a value to be delivered
+  {
+    // Acquire the delivered value
+    String HTTP_Payload = request->getParam("value")->value();
+    // Print the debug informations    
+    Serial.printf("[%lu]%s\r\n", millis(), HTTP_Payload.c_str());
+
+    //LED
+    if(HTTP_Payload == "A"){
+      if(A){
+        digitalWrite(LEDPIN,LOW);
+        A = 0;
+      }
+      else{
+        digitalWrite(LEDPIN,HIGH);
+        A = 1;
+      }
+    }
+    //FAN
+    if(HTTP_Payload == "B"){
+      if(B){
+        //Stop
+        digitalWrite(FANPIN1, LOW);
+        digitalWrite(FANPIN2, LOW);
+        B = 0;
+      }
+      else{
+        delay(500);
+        digitalWrite(FANPIN1, HIGH);
+        digitalWrite(FANPIN2, LOW);
+        delay(500);
+        B = 1;
+      }
+    }
+    //FEEDING
+    if(HTTP_Payload == "C"){
+      if(C){
+        //Servo rotates to 80°, open the feeding box.
+        myservo.write(80);
+        delay(500);
+        C = 0;
+      }
+      else{
+        C = 1;
+        //Servo rotates to 180°, close the feeding box.
+        myservo.write(180);
+        delay(500);
+      }
+    }
+    //WATERING
+    if(HTTP_Payload == "D"){
+      digitalWrite(RELAYPIN,HIGH);
+      delay(400);//Irrigation delay
+      digitalWrite(RELAYPIN,LOW);
+      delay(650);
+    }
+  }
+  request->send(200, "text/plain", "OK"); // Indicate the successful receiving of the sent data
+}
+
+//Set access to invalid URL
+void notFound(AsyncWebServerRequest *request) {
+    request->send(404, "text/plain", "Not found");
+}
+  
+void setup()
+{
+  Serial.begin(9600);
+  // Connect to hotspot, display IP address on LCD
+  WiFi.begin(SSID, PASS);
+  while (!WiFi.isConnected())
+  {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("WiFi connected.");
+  Serial.println("IP address: "); 
+  Serial.println(WiFi.localIP());
+
+  
+  //Set pins modes 
+  pinMode(LEDPIN,OUTPUT);
+  pinMode(STEAMPIN,INPUT);
+  pinMode(LIGHTPIN,INPUT);
+  pinMode(SOILHUMIDITYPIN,INPUT);
+  pinMode(WATERLEVELPIN,INPUT);
+  pinMode(RELAYPIN,OUTPUT);
+  pinMode(FANPIN1,OUTPUT);
+  pinMode(FANPIN2,OUTPUT);
+
+  delay(1000);
+
+  // attaches the servo on pin 26 to the servo object
+  myservo.attach(SERVOPIN);   
+
+  //Initialize LCD
+  lcd.init();
+  // Turn the (optional) backlight off/on
+  lcd.backlight();
+  //lcd.noBacklight();
+  //Clear display
+  lcd.clear();
+  
+  
+  //Set the position of Cursor
+  lcd.setCursor(0, 0);
+  //Display characters
+  lcd.print("IP:");
+  lcd.setCursor(0, 1);
+  lcd.print(WiFi.localIP());
+  
+  // Add HTTP homepage. When access, push web pages to the visitor
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(200, "text/html", index_html); });
+
+  // Set a response. When requesting the Ip/dht link on HTML, return the packaged sensor data
+  server.on("/dht", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(200, "text/plain", Merge_Data().c_str()); });
+
+  // Bind the function delivered by the configuration
+  server.on("/set", HTTP_GET, Config_Callback);   
+  // Bind the invalid address of the access
+  server.onNotFound(notFound);
+  // Initialize HTTP server
+  server.begin();  
+}
+void loop(){
+
+}
+
+
+#include <Arduino.h>
+#ifdef ESP32
+  #include <WiFi.h>
+#elif defined(ESP8266)
+  #include <ESP8266WiFi.h>
+#endif
+
+#include <dht11.h>
+#include <analogWrite.h>
+#include <ESP32_Servo.h>
+#include <LiquidCrystal_I2C.h>
+#include "BuzzerMusic.h"
+
+//To be displayed
+#define DHT11PIN        17  //Temperature and humidity sensor pin
+#define RAINWATERPIN    35  //Steam sensor pin
+#define LIGHTPIN        34  //Photoresistor pin
+#define WATERLEVELPIN   33  //Water level sensor pin
+#define SOILHUMIDITYPIN 32  //Soil humidity sensor pin
+//To be controlled
+#define LEDPIN          27  //LED pin
+#define RELAYPIN        25  //Relay pin (to control water pump)
+#define SERVOPIN        26  //Servo pin
+#define FANPIN1         19  //Fan IN+ pin
+#define FANPIN2         18  //Fan IN- pin
+#define BUZZERPIN       16  //Buzzer pin
+
+const char* ssid = "Faisal";
+const char* pwd = "Faisal2001";
+
+//Initialize LCD1602, 0x27 is I2C address
+LiquidCrystal_I2C lcd(0x27,16,2);
+WiFiServer server(80);  //Initialize wifi server
+dht11 DHT11;            //Initialize temperature and humidity sensor
+Servo myservo;          // create servo object to control a servo
+                // 16 servo objects can be created on the ESP32
+
+//Define variable as detected values
+String request;
+String dataBuffer;
+int Temperature;   //Temperature
+int Humidity;      //Humidity
+int SoilHumidity;  //Soil humidity
+int Light;         //Brightness
+int WaterLevel;    //Water level
+int Rainwater;     //Rainfall
+
+void setup() {
+  Serial.begin(9600);
+  //Connect to wifi
+  WiFi.begin(ssid, pwd);
+  //Determine whether connected
+  Serial.println("Connecting to WiFi...");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.print(".");
+  }
+  delay(1000);
+  //Serial monitor prints wifi name and IP address
+  Serial.println("Connected to WiFi");
+  Serial.print("WiFi NAME:");
+  Serial.println(ssid);
+  Serial.print("IP:");
+  Serial.println(WiFi.localIP());
+
+  //Initialize LCD
+  lcd.init();
+  // Turn the (optional) backlight off/on
+  lcd.backlight();
+  //lcd.noBacklight();
+  lcd.clear();
+  //Set the position of cursor
+  lcd.setCursor(0, 0);
+  //LCD prints
+  lcd.print("IP:");
+  //Set the position of cursor
+  lcd.setCursor(0, 1);
+  //LCD prints
+  lcd.print(WiFi.localIP());
+
+  //set pins mode
+  pinMode(LEDPIN,OUTPUT);
+  pinMode(RAINWATERPIN,INPUT);
+  pinMode(LIGHTPIN,INPUT);
+  pinMode(SOILHUMIDITYPIN,INPUT);
+  pinMode(WATERLEVELPIN,INPUT);
+  pinMode(RELAYPIN,OUTPUT);
+  pinMode(FANPIN1,OUTPUT);
+  pinMode(FANPIN2,OUTPUT);
+  pinMode(BUZZERPIN,OUTPUT);
+  delay(1000);
+
+  // attaches the servo on pin 26 to the servo object
+  myservo.attach(SERVOPIN);
+
+  //Start server
+  server.begin();
+}
+
+void loop() {
+  //Check whether a client is connected to the web server
+  //When the client is connected to server, "server.available()" returns a WiFiClient object for communication at client-side.
+  WiFiClient client = server.available();
+  if (client) {
+    Serial.println("New client connected");
+    while (client.connected()) {
+      //Determine whether the server sends data
+      if (client.available()) {
+        request = client.readStringUntil('s');
+        Serial.print("Received message: ");
+        Serial.println(request);
+      }
+        //Acquire all senser data
+        getSensorsData();
+        //put all data into "dataBuffer"
+        dataBuffer = "";
+        dataBuffer += String(Temperature,HEX);
+        dataBuffer += String(Humidity,HEX);
+        dataBuffer += dataHandle(SoilHumidity);
+        dataBuffer += dataHandle(Light);
+        dataBuffer += dataHandle(WaterLevel);
+        dataBuffer += dataHandle(Rainwater);
+        //Send data to server, transmit to APP
+        client.print(dataBuffer);
+        delay(500);
+
+      //LED
+      if(request == "a")
+      {
+        digitalWrite(LEDPIN,HIGH);
+      }
+      else if(request == "A")
+      {
+        digitalWrite(LEDPIN,LOW);
+      }
+      //Irrigation
+      else if(request == "b")
+      {
+        digitalWrite(RELAYPIN,HIGH);
+        delay(400);//Irrigation delay
+        digitalWrite(RELAYPIN,LOW);
+        delay(650);
+      }
+      //Fan
+      else if(request == "c")
+      {
+        delay(800);
+        digitalWrite(FANPIN1, HIGH);
+        digitalWrite(FANPIN2, LOW);
+        delay(200);
+      }
+      else if(request == "C")
+      {
+        digitalWrite(FANPIN1, LOW);
+        digitalWrite(FANPIN2, LOW);
+      }
+      //Feeding box
+      else if(request == "d")
+      {
+        //Servo rotates to 180°, open feeding box
+        myservo.write(80);
+        delay(500);
+      }
+      else if(request == "D")
+      {
+        //Servo rotates to 80°, close feeding box
+        myservo.write(180);
+      }
+      //Music
+      else if(request == "e")
+      {
+        Music();
+      }
+      request = "";
+    }
+    Serial.println("Client disconnected");
+  }
+}
+
+void getSensorsData() {
+  //Acquire data
+  int chk = DHT11.read(DHT11PIN);
+  //Steam sensor
+  Rainwater = analogRead(RAINWATERPIN);
+  //Photoresistor
+  Light = analogRead(LIGHTPIN);
+  //Soil humidity sensor
+  SoilHumidity = analogRead(SOILHUMIDITYPIN) * 2.3;
+  //Water level sensor
+  WaterLevel = analogRead(WATERLEVELPIN) * 2.5;
+  //Temperature
+  Temperature = DHT11.temperature;
+  //Humidity
+  Humidity = DHT11.humidity;
+}
+
+void Music() {
+  // iterate over the notes of the melody:
+  for (int thisNote = 0; thisNote < 98; thisNote++) {
+  
+    // to calculate the note duration, take one second
+    // divided by the note type.
+    //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
+    int noteDuration = 700/noteDurations2[thisNote];
+    tone(BUZZERPIN, melody2[thisNote],noteDuration);
+    
+    // to distinguish the notes, set a minimum time between them.
+    // the note's duration + 30% seems to work well:
+    int pauseBetweenNotes = noteDuration * 1.30;
+    delay(pauseBetweenNotes);
+    // stop the tone playing:
+    noTone(BUZZERPIN);
+  }
+}
+
+//Convert data into percentage
+String dataHandle(int data){
+  // Convert analog values into percentage
+  int percentage = (data / 4095.0) * 100;
+  // If the converted percentage is greater than 100, output 100. 
+  percentage = percentage > 100 ? 100 : percentage;
+  // Six characters store hexadecimal strings, one character is as terminators
+  char hexString[3];
+  // Convert hexadecimal values to 6-digit hexadecimal strings, add leading zeros: 0 is 00, 1 is 01...
+  sprintf(hexString, "%02X", percentage);
+
+  return hexString;
+}
+
+
+
+
+
+
+
+
+
